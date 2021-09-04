@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+</head>
+<body>
+
+<div class="container">
+
+
+    <h2>Show Customer</h2>
+    <a href="/create" class="btn btn-success">Create</a>
+    <br>
+    <br>
+    <form action="/find" method="get">
+        <input type="text" class="form-control" placeholder="search" oninput="search()" id="findName">
+        <button type="submit" class="btn btn-success">Find</button>
+    </form>
+
+    <br>
+    <br>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Edit</th>
+            <th>Delete</th>
+
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        <!--        <tr th:each="phone :${list}">-->
+
+        <!--            <td th:text="${phone.id}"></td>-->
+        <!--            <td th:text="${phone.name}"></td>-->
+        <!--            <td th:text="${phone.price}"></td>-->
+        <!--            <td th:text="${phone.quantity}"></td>-->
+
+        <!--            <td><a class="btn btn-warning">edit</a></td>-->
+        <!--            <td><a class="btn btn-warning">delete</a></td>-->
+
+        <!--        </tr>-->
+
+        </tbody>
+    </table>
+    <br>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Edit</th>
+            <th>Delete</th>
+
+        </tr>
+        </thead>
+        <tbody id="show">
+
+
+        </tbody>
+    </table>
+    <br>
+</div>
+
+
+</body>
+</html>
+<script>
+    function show() {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/api/phones",
+            success: function (list) {
+               showPhone(list);
+            },
+        })
+    }
+
+    function showPhone(list) {
+        let str = "";
+        for (let i = 0; i < list.length; i++) {
+            str += `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td>${list[i].name}</td>
+                    <td>${list[i].price}</td>
+                    <td>${list[i].quantity}</td>
+                    <td><a className="btn btn-warning">edit</a></td>
+                    <td><a className="btn btn-warning">delete</a></td>
+
+                </tr>`
+
+
+        }
+        document.getElementById("show").innerHTML = str;
+    }
+
+    function search() {
+        let name = document.getElementById("findName").value
+        let url = `http://localhost:8080/api/phones/${name}`
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                showFind(data)
+            }
+        })
+    }
+
+    function showFind(list) {
+        let str = "";
+        for (let i = 0; i < list.length; i++) {
+            str += `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td>${list[i].name}</td>
+                    <td>${list[i].price}</td>
+                    <td>${list[i].quantity}</td>
+                    <td><a className="btn btn-warning">edit</a></td>
+                    <td><a className="btn btn-warning">delete</a></td>
+
+                </tr>`
+
+
+        }
+        document.getElementById("tbody").innerHTML = str;
+    }
+    show()
+</script>
